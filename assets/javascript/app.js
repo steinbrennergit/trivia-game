@@ -1,6 +1,8 @@
 var $timer_display = $("#timer-display");
 var $q = $("#question");
 
+var intervalId = null;
+
 var questionObj = function (str, arr, n) {
     return {
         question: str,
@@ -8,8 +10,6 @@ var questionObj = function (str, arr, n) {
         answer: n
     }
 }
-
-var intervalId = null;
 
 var clock = {
     time: 0,
@@ -53,7 +53,7 @@ var clock = {
 
         return minutes + ":" + seconds;
     },
-}
+};
 
 var game = {
     questions: [],
@@ -80,7 +80,11 @@ var game = {
     },
     displayScore: function () {
         this.emptyOptions();
-        $("#score").text("Score: " + this.score + " out of " + this.nextIndex);
+        let ending = "s.";
+        if (this.nextIndex === 1) {
+            ending = ".";
+        }
+        $("#score").text("Score: " + this.score + " correct out of " + this.nextIndex + " question" + ending);
     },
     newQuestion: function () {
         if (game.lastQuestion) {
@@ -104,10 +108,11 @@ var game = {
         } else if (clock.time === 0) {
             $q.text("You ran out of time!");
         } else {
-            $q.text("Incorrect!");
+            let correctAnswer = this.currentQuestion.options[this.currentQuestion.answer];
+            $q.text("Incorrect! The correct answer was: '" + correctAnswer + "'");
         }
         this.displayScore();
-        setTimeout(game.newQuestion, 5000);
+        setTimeout(game.newQuestion, 4000);
         clock.stop();
     },
     buildQuestions: function () {
@@ -127,7 +132,7 @@ var game = {
         this.buildQuestions();
         this.newQuestion();
     }
-}
+};
 
 function createListeners() {
     $(".answer").on("click", function () {
