@@ -1,0 +1,18 @@
+.answer:hover {
+    background-color: pink;
+    border: 1px solid blue;
+    color: green;
+}
+
+h4 {
+    max-width: 40%;
+    margin: 0 auto;
+}
+
+button {
+    margin-top: 20px;
+}
+
+.hide {
+    display: none;
+}
