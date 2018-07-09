@@ -38,13 +38,15 @@ var clock = {
 
     // Each tick counts down 1 second
     tick: function () {
+
+        // Decrement time & update display
         clock.time--;
+        clock.displayTime();
+
+        // If clock reaches 0, call selectAnswer() without passing an arg, stop the clock
         if (clock.time === 0) {
-            clock.displayTime();
-            game.selectAnswer(400);
+            game.selectAnswer();
             clock.stop();
-        } else {
-            clock.displayTime();
         }
     },
 
@@ -109,10 +111,14 @@ var game = {
     // Display the player's progress; call after a selection is made
     displayScore: function () {
         this.emptyOptions();
+
+        // Plurality check 
         let ending = "s.";
         if (this.nextIndex === 1) {
             ending = ".";
         }
+
+        // Progress msg
         $("#score").text("Score: " + this.score + " correct out of " + this.nextIndex + " question" + ending);
     },
 
@@ -129,15 +135,19 @@ var game = {
             clock.start(30);
             game.currentQuestion = game.questions[game.nextIndex];
             game.nextIndex++;
+            
+            // Check if the next index would be out of bounds; this is the last question
             if (game.nextIndex >= game.questions.length) {
                 game.lastQuestion = true;
             }
+
             game.displayQuestion();
         }
     },
 
     // Called when player selects an answer or time-out; determine if correct, change display
     selectAnswer: function (i) {
+        
         // If correct; display msg and increment score
         if (i === this.currentQuestion.answer) {
             $q.text("Correct!");
@@ -145,6 +155,7 @@ var game = {
 
             // If incorrect; display appropriate msg for time-out or wrong answer
         } else if (clock.time === 0) {
+            let correctAnswer = this.currentQuestion.options[this.currentQuestion.answer];
             $q.text("You ran out of time! The correct answer was: '" + correctAnswer + "'");
         } else {
             let correctAnswer = this.currentQuestion.options[this.currentQuestion.answer];
